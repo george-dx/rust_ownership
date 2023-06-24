@@ -77,6 +77,17 @@ fn change(some_string: &mut String) {
 // } // Here, s goes out of scope and is dropped, so its memory goes away
 // the solution is to return the String directly
 
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for(i, &item) in bytes.iter().enumerate() {
+        if item == b' '{
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
 fn main() {
     scope_string();
     mutate_string();
@@ -141,10 +152,27 @@ fn main() {
     let r3 = &mut s_scope; // no problem
     println!("{r3}");
 
+
     // let reference_to_nothing = dangle(); // expected named lifetime param
     // this function's return type contains a borrowed value, but there is
     // no value for it to be borrowed from
+    
+    let str_slice = String::from("Hello world");
+    
+    let hello = &str_slice[..5];
+    let world = &str_slice[6..];
+
+    println!("{hello} {world}!");
+
+    let f_word = first_word(&str_slice);
+    println!("First word is: {f_word}");
+
+    let numbers = [1, 2, 3 , 4, 5];
+    let slice = &numbers[1..3];
+
+    assert_eq!(slice, &[2, 3]);
 } // Here, x goes out of scope, then s. However, because s's
   // value was moved, nothing special happens
   // Here, s3 goes out of scope and is dropped. s2 was moved,
   // so nothing happens. s1 goes out of scope and is dropped.
+
